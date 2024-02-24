@@ -3,7 +3,7 @@
 	padding-bottom: 1rem;
 	display: flex;
 	align-items: center;
-	gap: .1rem;
+	gap: .3rem;
 }
 .arrow {
 	border: none;
@@ -11,10 +11,10 @@
 }
 .button, .active {
 	cursor: pointer;
-	width: 2rem;
-	height: 2rem;
+	width: 4rem;
+	height: 3rem;
 	border: 1px solid #ccc;
-	border-radius: .3rem;
+	border-radius: .4rem;
 	transition: .2s ease-in-out;
 }
 .button:hover {

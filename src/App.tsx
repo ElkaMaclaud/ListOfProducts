@@ -1,31 +1,30 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
 import { useAppDispatch, useAppSelector } from "./store/reduxHooks";
-import { GET_FIELDS, GET_IDS, GET_ITEMS, LOADING_PAGE, SET_GOODS } from "./store/slice";
+import { GET_FIELDS, GET_IDS, GET_ITEMS, SET_GOODS } from "./store/slice";
 import LoadingPage from "./components/LoadingPage/LoadingPage";
 import FilterField from "./components/FilterField/FilterField";
-import GoodsWrapper from "./components/Page/GoodsWrapper";
-import Pagination from "./UI_Component/Pagination/Pagination";
+import GoodsWrapper from "./components/GoodsWrapper/GoodsWrapper";
+import { Pagination } from "./UI_Component";
 
 
 function App() {
-  const { data, loading, getItemserror, getIdserror } = useAppSelector((state) => state.page);
+  const { data, loading } = useAppSelector((state) => state.page);
   const dispatch = useAppDispatch();
   const [currentPage, setCurrentPage] = useState(1);
-  
+
   useEffect(() => {
     dispatch(GET_IDS())
     dispatch(GET_FIELDS("brand"))
     dispatch(GET_FIELDS("price"))
-  }, [getIdserror])
+  }, [])
   useEffect(() => {
     if (data.ids.length) {
-      dispatch(GET_ITEMS(data.ids.slice((currentPage - 1) * 50, currentPage * 50)));
+        dispatch(GET_ITEMS(data.ids.slice((currentPage - 1) * 50, currentPage * 50)));
     } else {
-      dispatch(LOADING_PAGE("COMPLICATED"))
-      dispatch(SET_GOODS([]))
+        dispatch(SET_GOODS([]))
     }
-  }, [data.ids, currentPage, getItemserror])
+  }, [data.ids, currentPage])
 
   if (loading == "COMPLICATED") {
     return (

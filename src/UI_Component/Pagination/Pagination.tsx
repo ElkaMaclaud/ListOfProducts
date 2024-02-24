@@ -7,7 +7,7 @@ type PaginationProps = {
 	setCurrentPage: Dispatch<SetStateAction<number>>;
 	data: string[];
 };
-const Pagination: FC<PaginationProps> = ({ currentPage, setCurrentPage, data }) => {
+export const Pagination: FC<PaginationProps> = ({ currentPage, setCurrentPage, data }) => {
 	const countGoods = 50;
 
 	const indexLastPage = currentPage * countGoods;
@@ -48,5 +48,3 @@ const Pagination: FC<PaginationProps> = ({ currentPage, setCurrentPage, data }) 
 		);
 	}
 };
-
-export default Pagination;

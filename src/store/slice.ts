@@ -1,13 +1,9 @@
-import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { RootState } from "./store";
 import { IGoods } from "../type/IGoods";
 import md5 from "md5";
-
-const password = "Valantis"
 export interface IInitialState {
 	header: string;
-	getIdserror: boolean;
-	getItemserror: boolean;
 	success: boolean;
 	loading: "LOADING" | "COMPLICATED";
 	data: IData;
@@ -27,8 +23,6 @@ interface IResultGoods {
 }
 const state: IInitialState = {
 	header: "",
-	getIdserror: false,
-	getItemserror: false,
 	success: false,
 	loading: "LOADING",
 	data: {
@@ -38,116 +32,105 @@ const state: IInitialState = {
 		goods: []
 	},
 };
-
-export const GET_IDS = createAsyncThunk<
-	IResult,
-	undefined,
-	{ rejectValue: string; state: RootState }
->(
-	"page/GET_IDS",
-	async (_, { rejectWithValue, getState }) => {
+async function fetchDataWithRetry<T>(url: string, options: RequestInit, retryCount = 3) {
+	let retries = 0;
+	while (retries < retryCount) {
 		try {
-			const timestamp = new Date().toISOString().slice(0, 10).replace(/-/g, "");
-			const xAuthValue = `${password}_${timestamp}`;
-			const response = await fetch("http://api.valantis.store:40000/", {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-					"X-Auth": md5(xAuthValue)
-				},
-				body: JSON.stringify({
-					action: "get_ids",
-					params: { offset: 0 }
-				})
-			});
-
-			if (!response) {
-				throw new Error("Network response was not ok");
+			const response = await fetch(url, options);
+			if (!response.ok) {
+				throw new Error("Что-то пошло не по-плану...");
 			}
-
-			const data = await response.json();
-			return data as IResult;
-		} catch (error) {
-			console.log(error);
-			return rejectWithValue(`${error}`);
-		}
-	}
-);
-
-export const GET_ITEMS = createAsyncThunk< 
-	IResultGoods,
-	string[],
-	{ rejectValue: string }
->("page/GET_ITEMS",
-	async (ids, { rejectWithValue }) => {
-		try {
-			const timestamp = new Date().toISOString().slice(0, 10).replace(/-/g, "");
-			const xAuthValue = (`${password}_${timestamp}`);
-			const response = await fetch("http://api.valantis.store:40000/", {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-					"X-Auth": md5(xAuthValue)
-				},
-				body: JSON.stringify({
-					action: "get_items",
-					params: { ids: ids }
-
-				})
-			});
-			if (!response) {
-				throw new Error("Network response was not ok");
-			}
-			const data = await response.json() as IResultGoods;
+			const data: T = await response.json();
 			return data;
 		} catch (error) {
-			console.log(error);
-			return rejectWithValue(`${error}`);
-		}
-	}
-);
-export const GET_FIELDS = createAsyncThunk<
-	string[],
-	string,
-	{ rejectValue: string }
->("page/GET_FIELDS",
-	async (value, { rejectWithValue }) => {
-		try {
-			const timestamp = new Date().toISOString().slice(0, 10).replace(/-/g, "");
-			const xAuthValue = (`${password}_${timestamp}`);
-			const response = await fetch("http://api.valantis.store:40000/", {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-					"X-Auth": md5(xAuthValue)
-				},
-				body: JSON.stringify({
-					action: "get_fields",
-					params: { field: value, offset: 0 }
-
-				})
-			});
-			if (!response) {
-				throw new Error("Network response was not ok");
+			retries++;
+			if (retries === retryCount) {
+				throw error;
 			}
-			const data = await response.json();
-			return data.result;
-		} catch (error) {
-			console.log(error);
-			return rejectWithValue(`${error}`);
 		}
 	}
+};
+export const GET_IDS = createAsyncThunk("GET_IDS", async (_, { rejectWithValue }) => {
+	const url = 'http://api.valantis.store:40000/';
+	const timestamp = new Date().toISOString().slice(0, 10).replace(/-/g, "");
+	const xAuthValue = `${process.env.REACT_APP_PASSWORD}_${timestamp}`;
+	const options: RequestInit = {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json",
+			"X-Auth": md5(xAuthValue)
+		},
+		body: JSON.stringify({
+			action: "get_ids",
+			params: { offset: 0 }
+		})
+	}
+
+	try {
+		const data = await fetchDataWithRetry<IResult>(url, options);
+		return data;
+	} catch (error) {
+		console.error("Ошибка получения данных:", error);
+		return rejectWithValue(error);
+	}
+});
+
+export const GET_ITEMS = createAsyncThunk("GET_ITEMS", async (ids: string[], { rejectWithValue }) => {
+	const url = 'http://api.valantis.store:40000/';
+	const timestamp = new Date().toISOString().slice(0, 10).replace(/-/g, "");
+	const xAuthValue = `${process.env.REACT_APP_PASSWORD}_${timestamp}`;
+	const options: RequestInit = {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json",
+			"X-Auth": md5(xAuthValue)
+		},
+		body: JSON.stringify({
+			action: "get_items",
+			params: { ids: ids }
+		})
+	}
+	try {
+		const data = await fetchDataWithRetry<IResultGoods>(url, options);
+		return data;
+	} catch (error) {
+		console.error("Ошибка получения данных:", error);
+		return rejectWithValue(error);
+	}
+});
+
+
+export const GET_FIELDS = createAsyncThunk("GET_FIELDS", async (value: string, { rejectWithValue }) => {
+	const url = 'http://api.valantis.store:40000/';
+	const timestamp = new Date().toISOString().slice(0, 10).replace(/-/g, "");
+	const xAuthValue = (`${process.env.REACT_APP_PASSWORD}_${timestamp}`);
+	const options: RequestInit = {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json",
+			"X-Auth": md5(xAuthValue)
+		},
+		body: JSON.stringify({
+			action: "get_fields",
+			params: { field: value, offset: 0 }
+
+		})
+	}
+	try {
+		const data = await fetchDataWithRetry<{result: string[]}>(url, options);
+		return data?.result;
+	} catch (error) {
+		console.error("Ошибка получения данных:", error);
+		return rejectWithValue(error);
+	}
+}
 );
-export const FILTER = createAsyncThunk<
-	IResult,
-	[string, string | number],
-	{ rejectValue: string }
->("page/FILTER",
-	async (value, { rejectWithValue }) => {
-		try {
+export const FILTER = createAsyncThunk("FILTER",
+	async (value: [string, string | number],  { rejectWithValue }) => {
+			const url = 'http://api.valantis.store:40000/';
 			const timestamp = new Date().toISOString().slice(0, 10).replace(/-/g, "");
-			const xAuthValue = (`${password}_${timestamp}`);
-			const response = await fetch("http://api.valantis.store:40000/", {
+			const xAuthValue = (`${process.env.REACT_APP_PASSWORD}_${timestamp}`);
+			const options: RequestInit =  {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
@@ -158,18 +141,15 @@ export const FILTER = createAsyncThunk<
 					params: { [value[0]]: value[1] }
 
 				})
-			});
-			if (!response) {
-				throw new Error("Network response was not ok");
 			}
-			const data = await response.json();
-			return data;
-		} catch (error) {
-			console.log(error);
-			return rejectWithValue(`${error}`);
-		}
-	}
-);
+			try {
+				const data = await fetchDataWithRetry<IResult>(url, options);
+				return data;
+			} catch (error) {
+				console.error("Ошибка получения данных:", error);
+				return rejectWithValue(error);
+			}
+	});
 
 
 const slice = createSlice({
@@ -192,14 +172,6 @@ const slice = createSlice({
 				};
 			}
 		});
-		builder.addCase(GET_IDS.rejected, (state, action) => {
-			if (action.payload) {
-				return {
-					...state,
-					getIdserror: true,
-				};
-			}
-		});
 		builder.addCase(GET_IDS.fulfilled, (state, action) => {
 			if (action.payload) {
 				return {
@@ -207,7 +179,6 @@ const slice = createSlice({
 					header: "",
 					data: {
 						...state.data,
-						getIdserror: false,
 						ids: Array.from(new Set(action.payload.result))
 					}
 				};
@@ -216,16 +187,9 @@ const slice = createSlice({
 		builder.addCase(GET_ITEMS.pending, (state) => {
 			return {
 				...state,
-				getItemserror: false,
 				loading: "LOADING",
 			};
 		});
-		builder.addCase(GET_ITEMS.rejected, (state) => {
-			return {
-				...state,
-				getItemserror: true,
-			};
-		})
 		builder.addCase(GET_ITEMS.fulfilled, (state, action) => {
 			if (action.payload) {
 				const uniqueGoods: IGoods[] = [];
@@ -238,7 +202,6 @@ const slice = createSlice({
 				});
 				return {
 					...state,
-					getItemserror: false,
 					loading: "COMPLICATED",
 					data: {
 						...state.data,
@@ -247,7 +210,6 @@ const slice = createSlice({
 				};
 			}
 		});
-
 		builder.addCase(GET_FIELDS.fulfilled, (state, action) => {
 			if (action.payload) {
 				const value = action.meta.arg;
@@ -269,14 +231,6 @@ const slice = createSlice({
 				};
 			}
 		});
-		builder.addCase(FILTER.rejected, (state, action) => {
-			if (action.payload) {
-				return {
-					...state,
-					getIdserror: true,
-				};
-			}
-		});
 		builder.addCase(FILTER.fulfilled, (state, action) => {
 			if (action.payload) {
 				const value = action.meta.arg;
@@ -285,18 +239,12 @@ const slice = createSlice({
 					header: value.toString(),
 					data: {
 						...state.data,
-						getIdserror: false,
 						ids: Array.from(new Set(action.payload.result))
 					}
 				};
 			}
 		});
 	},
-
-
-
-
-
 });
 
 export default slice.reducer;

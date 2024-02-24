@@ -1,7 +1,7 @@
 import React, {	FC, memo } from "react";
 import classes from "./style/WideCard.module.css";
 import { IGoods } from "../../type/IGoods";
-import ImageCard from "../../UI_Component/ImageCard/ImageCard";
+import { ImageCard } from "../../UI_Component";
 
 export const WideCard: FC<{
 	good: IGoods;
