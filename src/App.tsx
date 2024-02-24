@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
 import { useAppDispatch, useAppSelector } from "./store/reduxHooks";
-import { GET_FIELDS, GET_IDS, GET_ITEMS } from "./store/slice";
+import { GET_FIELDS, GET_IDS, GET_ITEMS, LOADING_PAGE, SET_GOODS } from "./store/slice";
 import LoadingPage from "./components/LoadingPage/LoadingPage";
 import FilterField from "./components/FilterField/FilterField";
 import GoodsWrapper from "./components/Page/GoodsWrapper";
@@ -21,6 +21,9 @@ function App() {
   useEffect(() => {
     if (data.ids.length) {
       dispatch(GET_ITEMS(data.ids.slice((currentPage - 1) * 50, currentPage * 50)));
+    } else {
+      dispatch(LOADING_PAGE("COMPLICATED"))
+      dispatch(SET_GOODS([]))
     }
   }, [data.ids, currentPage, getItemserror])
 

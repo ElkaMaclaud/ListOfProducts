@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 import { useAppDispatch } from "../../store/reduxHooks";
 import classes from "./style/Search.module.css"
-import { FILTER } from "../../store/slice";
+import { FILTER, GET_IDS } from "../../store/slice";
 
 export const Search = ({str}: {str: string}) => {
 	const [value, setValue] = useState(str)
@@ -10,13 +10,16 @@ export const Search = ({str}: {str: string}) => {
 	const dispatch = useAppDispatch()
 	
 	const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+		setValue(event.target.value)
+		if (event.currentTarget.value == "") {
+			dispatch(GET_IDS())
+		}
 		if (event.currentTarget.value !== prevValueRef.current) {
 			if (timerRef.current) {
 				clearTimeout(timerRef.current);
 			}
 			prevValueRef.current = event.currentTarget.value;
 			if (prevValueRef.current) {
-				setValue(event.target.value)
 				timerRef.current = setTimeout(() => {
 					dispatch(FILTER(["product", event.target.value]))
 				}, 1000);

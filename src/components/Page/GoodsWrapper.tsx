@@ -23,8 +23,8 @@ const GoodsWrapper = () => {
 		);
 	} else {
 		return (
-			<div className={classes.wrapperPage}>
-				<h1>Здесь ничего нет</h1>
+			<div className={classes.wrapperPageEmpty}>
+				<h1>По вашему запросу: <em>{header.split(",")[0] == "product" ? header.split(",")[1] : ""}</em> ничего не найдено</h1>
 				<Search str={header.split(",")[0] == "product" ? header.split(",")[1] : ""} />
 			</div>
 		)

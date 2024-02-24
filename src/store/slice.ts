@@ -175,6 +175,12 @@ const slice = createSlice({
 	name: "Page",
 	initialState: state,
 	reducers: {
+		LOADING_PAGE: (state, action) => {
+			state.loading = action.payload;
+		},
+		SET_GOODS: (state, action) => {
+			state.data.goods = action.payload;
+		},
 	},
 	extraReducers: (builder) => {
 		builder.addCase(GET_IDS.pending, (state, action) => {
@@ -293,3 +299,4 @@ const slice = createSlice({
 });
 
 export default slice.reducer;
+export const { LOADING_PAGE, SET_GOODS } = slice.actions;
