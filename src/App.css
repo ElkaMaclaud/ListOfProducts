@@ -4,6 +4,7 @@
   background-color: #eee;
 }
 .pageWrapper {
+  min-height: 100vh;
   padding-bottom: 1rem;
   margin: 0 auto;
   width: 1200px;
