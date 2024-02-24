@@ -51,7 +51,7 @@ async function fetchDataWithRetry<T>(url: string, options: RequestInit, retryCou
 	}
 };
 export const GET_IDS = createAsyncThunk("GET_IDS", async (_, { rejectWithValue }) => {
-	const url = 'http://api.valantis.store:40000/';
+	const url = 'https://api.valantis.store:41000/';
 	const timestamp = new Date().toISOString().slice(0, 10).replace(/-/g, "");
 	const xAuthValue = `${process.env.REACT_APP_PASSWORD}_${timestamp}`;
 	const options: RequestInit = {
@@ -76,7 +76,7 @@ export const GET_IDS = createAsyncThunk("GET_IDS", async (_, { rejectWithValue }
 });
 
 export const GET_ITEMS = createAsyncThunk("GET_ITEMS", async (ids: string[], { rejectWithValue }) => {
-	const url = 'http://api.valantis.store:40000/';
+	const url = 'https://api.valantis.store:41000/';
 	const timestamp = new Date().toISOString().slice(0, 10).replace(/-/g, "");
 	const xAuthValue = `${process.env.REACT_APP_PASSWORD}_${timestamp}`;
 	const options: RequestInit = {
@@ -101,7 +101,7 @@ export const GET_ITEMS = createAsyncThunk("GET_ITEMS", async (ids: string[], { r
 
 
 export const GET_FIELDS = createAsyncThunk("GET_FIELDS", async (value: string, { rejectWithValue }) => {
-	const url = 'http://api.valantis.store:40000/';
+	const url = 'https://api.valantis.store:41000/';
 	const timestamp = new Date().toISOString().slice(0, 10).replace(/-/g, "");
 	const xAuthValue = (`${process.env.REACT_APP_PASSWORD}_${timestamp}`);
 	const options: RequestInit = {
@@ -127,7 +127,7 @@ export const GET_FIELDS = createAsyncThunk("GET_FIELDS", async (value: string, {
 );
 export const FILTER = createAsyncThunk("FILTER",
 	async (value: [string, string | number],  { rejectWithValue }) => {
-			const url = 'http://api.valantis.store:40000/';
+			const url = 'https://api.valantis.store:41000/';
 			const timestamp = new Date().toISOString().slice(0, 10).replace(/-/g, "");
 			const xAuthValue = (`${process.env.REACT_APP_PASSWORD}_${timestamp}`);
 			const options: RequestInit =  {
