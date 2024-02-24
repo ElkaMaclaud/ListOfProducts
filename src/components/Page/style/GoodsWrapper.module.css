@@ -1,0 +1,10 @@
+.wrapperPage {
+	margin: 1rem auto;
+	position: relative;
+}
+
+.scrollUp {
+	position: fixed;
+	bottom: 10px;
+	right: 10px;
+}

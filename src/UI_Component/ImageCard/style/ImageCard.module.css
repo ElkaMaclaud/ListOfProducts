@@ -1,0 +1,10 @@
+.wrapper {
+	overflow: hidden;
+}
+.img {
+	border: 1px solid #eee;
+	width: 11rem;
+	height: 11rem;
+	border-radius: 2rem;
+	object-fit: contain;
+}

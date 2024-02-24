@@ -1,0 +1,31 @@
+.wrapperCard {
+	background-color: #fff;
+	max-width: fit-content;
+	border: 1px solid #ccc;
+	border-top: none;
+	border-radius: 1rem;
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	max-width: 100%;
+	padding: 1rem 0;
+	font-size: 1rem;
+}
+.wrapper {
+	width: fit-content;
+	margin: 0 4rem 0 1rem;
+	display: flex;
+	gap: 2rem;
+	align-items: center;
+}
+
+.price, .brand {
+	display: flex;
+	align-items: center;
+	gap: .5rem;
+}
+.description {
+	display: flex;
+	flex-direction: column;
+	
+}

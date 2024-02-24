@@ -1,0 +1,25 @@
+.wrapper {
+	margin: auto;
+	padding-bottom: 1rem;
+	display: flex;
+	align-items: center;
+	gap: .1rem;
+}
+.arrow {
+	border: none;
+	cursor: pointer;
+}
+.button, .active {
+	cursor: pointer;
+	width: 2rem;
+	height: 2rem;
+	border: 1px solid #ccc;
+	border-radius: .3rem;
+	transition: .2s ease-in-out;
+}
+.button:hover {
+	background-color: #ccc;
+}
+.active {
+	background-color: #ddd;
+}
