@@ -3,6 +3,7 @@ import { RootState } from "./store";
 import { IGoods } from "../type/IGoods";
 import md5 from "md5";
 
+const password = "Valantis"
 export interface IInitialState {
 	header: string;
 	getIdserror: boolean;
@@ -47,7 +48,7 @@ export const GET_IDS = createAsyncThunk<
 	async (_, { rejectWithValue, getState }) => {
 		try {
 			const timestamp = new Date().toISOString().slice(0, 10).replace(/-/g, "");
-			const xAuthValue = `${process.env.REACT_APP_PASSWORD}_${timestamp}`;
+			const xAuthValue = `${password}_${timestamp}`;
 			const response = await fetch("http://api.valantis.store:40000/", {
 				method: "POST",
 				headers: {
@@ -81,7 +82,7 @@ export const GET_ITEMS = createAsyncThunk<
 	async (ids, { rejectWithValue }) => {
 		try {
 			const timestamp = new Date().toISOString().slice(0, 10).replace(/-/g, "");
-			const xAuthValue = (`${process.env.REACT_APP_PASSWORD}_${timestamp}`);
+			const xAuthValue = (`${password}_${timestamp}`);
 			const response = await fetch("http://api.valantis.store:40000/", {
 				method: "POST",
 				headers: {
@@ -113,7 +114,7 @@ export const GET_FIELDS = createAsyncThunk<
 	async (value, { rejectWithValue }) => {
 		try {
 			const timestamp = new Date().toISOString().slice(0, 10).replace(/-/g, "");
-			const xAuthValue = (`${process.env.REACT_APP_PASSWORD}_${timestamp}`);
+			const xAuthValue = (`${password}_${timestamp}`);
 			const response = await fetch("http://api.valantis.store:40000/", {
 				method: "POST",
 				headers: {
@@ -145,7 +146,7 @@ export const FILTER = createAsyncThunk<
 	async (value, { rejectWithValue }) => {
 		try {
 			const timestamp = new Date().toISOString().slice(0, 10).replace(/-/g, "");
-			const xAuthValue = (`${process.env.REACT_APP_PASSWORD}_${timestamp}`);
+			const xAuthValue = (`${password}_${timestamp}`);
 			const response = await fetch("http://api.valantis.store:40000/", {
 				method: "POST",
 				headers: {
