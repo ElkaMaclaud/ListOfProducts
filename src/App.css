@@ -1,29 +1,26 @@
 .App {
-  text-align: center;
-  margin-top: 0;
-  background-color: #efefef;
-}
-.pageWrapper {
-  background-color: #efefef;
+  margin: auto;
+  max-width: 1200px;
   min-height: 100vh;
-  padding-bottom: 2rem;
-  margin: 0 auto;
-  padding: 0 2rem;
-  width: 1200px;
+}
+
+.pageWrapper {
+  padding: 0 2rem 2rem 2rem;
+  margin: auto;
   display: flex;
   justify-content: center;
   gap: 1rem;
 }
+
 .filter {
   flex: 1 1 0;
-  padding: 0;
+  width: 19%;
 }
+
 .goods {
+  text-align: center;
   flex: 1 1 1;
   display: flex;
   flex-direction: column;
-  width: 80%;
+  width: 78%;
 }
-
-
-

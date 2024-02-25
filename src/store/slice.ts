@@ -1,5 +1,4 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { RootState } from "./store";
 import { IGoods } from "../type/IGoods";
 import md5 from "md5";
 export interface IInitialState {
@@ -164,14 +163,6 @@ const slice = createSlice({
 		},
 	},
 	extraReducers: (builder) => {
-		builder.addCase(GET_IDS.pending, (state, action) => {
-			if (action.payload) {
-				return {
-					...state,
-					loading: "LOADING",
-				};
-			}
-		});
 		builder.addCase(GET_IDS.fulfilled, (state, action) => {
 			if (action.payload) {
 				return {
@@ -221,14 +212,6 @@ const slice = createSlice({
 					}
 				};
 
-			}
-		});
-		builder.addCase(FILTER.pending, (state, action) => {
-			if (action.payload) {
-				return {
-					...state,
-					loading: "LOADING",
-				};
 			}
 		});
 		builder.addCase(FILTER.fulfilled, (state, action) => {
