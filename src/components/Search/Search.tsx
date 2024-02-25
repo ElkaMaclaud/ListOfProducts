@@ -11,9 +11,6 @@ export const Search = ({str}: {str: string}) => {
 	
 	const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
 		setValue(event.target.value)
-		if (event.currentTarget.value == "") {
-			dispatch(GET_IDS())
-		}
 		if (event.currentTarget.value !== prevValueRef.current) {
 			if (timerRef.current) {
 				clearTimeout(timerRef.current);
@@ -22,6 +19,10 @@ export const Search = ({str}: {str: string}) => {
 			if (prevValueRef.current) {
 				timerRef.current = setTimeout(() => {
 					dispatch(FILTER(["product", event.target.value]))
+				}, 1000);
+			} else {
+				timerRef.current = setTimeout(() => {
+					dispatch(GET_IDS())
 				}, 1000);
 			}
 		}
